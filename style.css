@@ -121,8 +121,8 @@ body {
     display: grid;
     gap: 5px;
     grid-template-columns: repeat(3, 1fr);
-    width: clamp(50vw, 500px, 70vw);
-    height: clamp(50vw, 500px, 70vw);
+    width: clamp(30vw, 500px, 70vw);
+    height: clamp(30vw, 500px, 70vw);
 }
 
 .table .house {
