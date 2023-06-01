@@ -29,7 +29,9 @@ function RenderController() {
         gameContent.classList.toggle("enable", true)
         gameContent.classList.toggle("disable", false)
 
-        table.querySelector(".line-winner")?.remove()
+        document.querySelectorAll(`.house.disable`).forEach(house => {
+            house.classList.toggle("disable", false)
+        })
 
         toggleSide(side)
     }
@@ -54,6 +56,8 @@ function RenderController() {
         if (!house) { return currentSide }
 
         house.innerHTML = `<i class="icon bi-${ICON_CLASS[oldSide]} ${oldSide}"></i>`
+
+        house.classList.add("disable")
 
         toggleSide(currentSide)
     }

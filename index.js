@@ -1,3 +1,8 @@
+const CONFIG_AI = {
+    side: "",
+    delay: 100
+}
+
 function App() {
     const gameController = GameController()
     const renderController = RenderController()
@@ -8,11 +13,11 @@ function App() {
 
     const setupMap = () => {
         const lances = [
-            { x: 1, y: 1 },
-            { x: 0, y: 0 },
-            { x: 2, y: 0 },
-            { x: 0, y: 2 },
-            { x: 2, y: 2 },
+            // { x: 1, y: 0 },
+            // { x: 0, y: 0 },
+            // { x: 0, y: 2 },
+            // { x: 2, y: 0 },
+            // { x: 2, y: 2 },
         ]
 
         lances.forEach(({ x, y }) => {
@@ -24,7 +29,7 @@ function App() {
         })
     }
 
-    const aiLance = async () => {
+    const aiLance = async() => {
         if (!game.running) { return }
 
         if (!AI_ENABLE) { return }
@@ -34,6 +39,14 @@ function App() {
         const resAI = await aiControl.newLance(gameController.game.map)
 
         console.log(resAI)
+
+        const { x, y } = resAI
+
+        const _house = document.querySelector(`.table .house[data-position-x="${x}"][data-position-y="${y}"]`)
+
+        if (!_house) { return }
+
+        playerLance(x, y, _house, true)
 
         aiIsLance = false
     }
@@ -66,19 +79,27 @@ function App() {
     })
 
     gameController.subscribeObserver({
-        code: "$game/new-game", observerFunction: ({ data }) => {
+        code: "$game/new-game",
+        observerFunction: ({ data }) => {
             renderController.resetGame(data.side)
+
+            const playerAI = data.players.find(player => player.code == "ai")
+
+            aiControl.setup({...CONFIG_AI, side: playerAI.side })
         }
     })
+
     gameController.subscribeObserver({
-        code: "$game/new-lance", observerFunction: ({ data }) => {
+        code: "$game/new-lance",
+        observerFunction: ({ data }) => {
             renderController.newLance(data.position.x, data.position.y, data.currentSide, data.oldSide)
-            console.log(data.player)
-            aiLance()
+
+            data.player.code == "player" && aiLance()
         }
     })
     gameController.subscribeObserver({
-        code: "$game/end-game", observerFunction: ({ data }) => {
+        code: "$game/end-game",
+        observerFunction: ({ data }) => {
             renderController.gameEnd(data.winner)
         }
     })
