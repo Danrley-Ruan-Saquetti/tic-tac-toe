@@ -14,6 +14,12 @@
     <script src="https://cdn.jsdelivr.net/npm/appwrite@10.1.0" />
     <script>
         const { Client } = Appwrite;
+        
+        const client = new Client();
+
+        client
+            .setEndpoint('https://cloud.appwrite.io/v1')
+            .setProject('tic-tac-toe');
     </script>
 </head>
 
